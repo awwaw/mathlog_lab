@@ -11,8 +11,11 @@ public class Variable extends Expression {
         return name;
     }
 
-//    @Override
-    public Expression getExpr() {
-        return this;
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != getClass()) {
+            return false;
+        }
+        return ((Variable) o).name.equals(name);
     }
 }

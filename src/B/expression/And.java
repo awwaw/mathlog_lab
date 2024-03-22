@@ -6,7 +6,21 @@ public class And extends DoubleArgumentExpression {
         super(left, right);
     }
 
+    @Override
+    public Type getType() {
+        return Type.AND;
+    }
+
     public String toString() {
-        return left.toString() + "&" + right.toString();
+        return "(" + left.toString() + "&" + right.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != getClass()) {
+            return false;
+        }
+        And expr = (And) o;
+        return expr.left.equals(left) && expr.right.equals(right);
     }
 }

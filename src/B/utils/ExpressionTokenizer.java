@@ -29,7 +29,11 @@ public class ExpressionTokenizer {
                     currentVariable = new StringBuilder();
                 }
                 switch (currentChar) {
-                    case '(', ')', '&', '!' -> tokens.add(String.valueOf(currentChar));
+                    case '(', ')', '&', '!', ',' -> tokens.add(String.valueOf(currentChar));
+                    case '-' -> {
+                        tokens.add("->");
+                        i++;
+                    }
                     case '|' -> {
                         if (i + 1 < expression.length()) {
                             char next = expression.charAt(i + 1);
@@ -48,6 +52,7 @@ public class ExpressionTokenizer {
         if (!currentVariable.isEmpty()) {
             tokens.add(currentVariable.toString());
         }
+        tokens.add("$");
         return tokens;
     }
 }

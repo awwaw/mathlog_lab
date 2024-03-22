@@ -17,4 +17,12 @@ public class Negation extends Expression {
     public String toString() {
         return "!" + expr.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != getClass()) {
+            return false;
+        }
+        return expr.equals(((Negation) o).expr);
+    }
 }

@@ -9,11 +9,13 @@ public abstract class DoubleArgumentExpression extends Expression {
         this.right = right;
     }
 
-    protected Expression getLeft() {
+    public Expression getLeft() {
         return left;
     }
 
-    protected Expression getRight() {
+    public Expression getRight() {
         return right;
     }
+
+    public abstract Type getType();
 }
