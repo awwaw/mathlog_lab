@@ -2,10 +2,7 @@ package B.proof;
 
 import B.expression.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DeductionProof implements Proof {
 
@@ -36,16 +33,25 @@ public class DeductionProof implements Proof {
         throw new UnsupportedOperationException("wtf");
     }
 
-    private boolean checkEquivalentLeft(Turnstile first, Turnstile second) {
+    public static boolean checkEquivalentLeft(Turnstile first, Turnstile second) {
         if (!(first.getLeft() instanceof Context && second.getLeft() instanceof Context)) {
             return false;
         }
         Context fst = (Context) first.getLeft();
         Context snd = (Context) second.getLeft();
 
-        Set<String> exprsLeft = new HashSet<>(fst.getExprs().stream().map(Expression::toString).toList());
-        Set<String> exprsRight = new HashSet<>(snd.getExprs().stream().map(Expression::toString).toList());
+        Map<String, Integer> exprsLeft = new HashMap<>();
+        Map<String, Integer> exprsRight = new HashMap<>();
 
+        for (Expression expr : fst.getExprs()) {
+            String str = expr.toString();
+            exprsLeft.put(str, exprsLeft.getOrDefault(str, 0) + 1);
+        }
+
+        for (Expression expr : snd.getExprs()) {
+            String str = expr.toString();
+            exprsRight.put(str, exprsRight.getOrDefault(str, 0) + 1);
+        }
         return exprsLeft.equals(exprsRight);
     }
 
@@ -58,5 +64,15 @@ public class DeductionProof implements Proof {
             return String.format("[Ded. %d]", index);
         }
         return null;
+    }
+
+    @Override
+    public String check(List<Expression> expressions, List<Integer> indexes) {
+        throw new UnsupportedOperationException("wtf");
+    }
+
+    @Override
+    public ProofType getType() {
+        return ProofType.DEDUCTION;
     }
 }

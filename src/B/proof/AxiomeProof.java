@@ -152,6 +152,9 @@ public class AxiomeProof implements Proof {
 
     @Override
     public String check(Expression expr) {
+        if (expr instanceof Turnstile turn) {
+            return check(turn.getRight());
+        }
         for (int i = 0; i < AXIOMS.size(); i++) {
             Map<String, Expression> keys = new HashMap<>();
             Expression axiom = AXIOMS.get(i);
@@ -165,5 +168,15 @@ public class AxiomeProof implements Proof {
     @Override
     public String check(Expression expr, Expression candidate, int index) {
         throw new UnsupportedOperationException("wtf");
+    }
+
+    @Override
+    public String check(List<Expression> expressions, List<Integer> indexes) {
+        throw new UnsupportedOperationException("wtf");
+    }
+
+    @Override
+    public ProofType getType() {
+        return ProofType.AXIOME;
     }
 }

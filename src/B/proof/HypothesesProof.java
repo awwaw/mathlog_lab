@@ -4,6 +4,8 @@ import B.expression.Context;
 import B.expression.Expression;
 import B.expression.Turnstile;
 
+import java.util.List;
+
 public class HypothesesProof implements Proof {
     @Override
     public String check(Expression expr) {
@@ -21,5 +23,15 @@ public class HypothesesProof implements Proof {
     @Override
     public String check(Expression expr, Expression candidate, int index) {
         throw new UnsupportedOperationException("wtf");
+    }
+
+    @Override
+    public String check(List<Expression> expressions, List<Integer> indexes) {
+        throw new UnsupportedOperationException("wtf");
+    }
+
+    @Override
+    public ProofType getType() {
+        return ProofType.HYPOTHESIS;
     }
 }
