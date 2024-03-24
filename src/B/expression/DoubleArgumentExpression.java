@@ -9,13 +9,15 @@ public abstract class DoubleArgumentExpression extends Expression {
         this.right = right;
     }
 
-    public Expression getLeft() {
+    public final Expression getLeft() {
         return left;
     }
 
-    public Expression getRight() {
+    public final Expression getRight() {
         return right;
     }
 
-    public abstract Type getType();
+    public Type getType() {
+        return null;
+    }
 }

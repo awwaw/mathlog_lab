@@ -1,12 +1,13 @@
 package B.expression;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Context extends Expression {
 
-    private final List<Expression> exprs;
+    private ArrayList<Expression> exprs;
 
-    public Context(List<Expression> exprs) {
+    public Context(ArrayList<Expression> exprs) {
         this.exprs = exprs;
     }
 
@@ -33,7 +34,17 @@ public class Context extends Expression {
         return true;
     }
 
+    @Override
+    public Expression clone() {
+        ArrayList<Expression> expressions = new ArrayList<>(exprs);
+        return new Context(expressions);
+    }
+
     public List<Expression> getExprs() {
         return exprs;
+    }
+
+    public void addExpression(Expression expr) {
+        exprs.add(expr);
     }
 }

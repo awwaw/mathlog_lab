@@ -24,4 +24,9 @@ public class Turnstile extends DoubleArgumentExpression {
         Turnstile turn = (Turnstile) o;
         return turn.left.equals(left) && turn.right.equals(right);
     }
+
+    @Override
+    public Expression clone() {
+        return new Turnstile(left, right);
+    }
 }

@@ -20,6 +20,11 @@ public class Or extends DoubleArgumentExpression {
     }
 
     @Override
+    public Expression clone() {
+        return new Or(left, right);
+    }
+
+    @Override
     public Type getType() {
         return Type.OR;
     }

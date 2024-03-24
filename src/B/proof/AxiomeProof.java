@@ -1,4 +1,4 @@
-package B.utils;
+package B.proof;
 
 import B.expression.*;
 
@@ -123,6 +123,9 @@ public class AxiomeProof implements Proof {
     private boolean check(Map<String, Expression> substitution, Expression axiom, Expression expr) {
         if (axiom instanceof DoubleArgumentExpression dax) {
             if (expr instanceof DoubleArgumentExpression dexpr) {
+                if (expr instanceof Turnstile turn && turn.getLeft().toString().isEmpty()) {
+                    return check(substitution, axiom, turn.getRight());
+                }
                 if (dexpr.getType() != dax.getType()) {
                     return false;
                 }
@@ -147,7 +150,6 @@ public class AxiomeProof implements Proof {
         return true;
     }
 
-
     @Override
     public String check(Expression expr) {
         for (int i = 0; i < AXIOMS.size(); i++) {
@@ -158,5 +160,10 @@ public class AxiomeProof implements Proof {
             }
         }
         return null;
+    }
+
+    @Override
+    public String check(Expression expr, Expression candidate, int index) {
+        throw new UnsupportedOperationException("wtf");
     }
 }

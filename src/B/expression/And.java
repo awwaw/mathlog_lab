@@ -23,4 +23,9 @@ public class And extends DoubleArgumentExpression {
         And expr = (And) o;
         return expr.left.equals(left) && expr.right.equals(right);
     }
+
+    @Override
+    public Expression clone() {
+        return new And(left, right);
+    }
 }

@@ -24,4 +24,9 @@ public class Implication extends DoubleArgumentExpression {
         Implication expr = (Implication) o;
         return expr.left.equals(left) && expr.right.equals(right);
     }
+
+    @Override
+    public Expression clone() {
+        return new Implication(left, right);
+    }
 }

@@ -9,6 +9,10 @@ public class Negation extends Expression {
         this.expr = expr;
     }
 
+    public Negation(Negation other) {
+        this.expr = other.getExpr();
+    }
+
     public Expression getExpr() {
         return expr;
     }
@@ -24,5 +28,10 @@ public class Negation extends Expression {
             return false;
         }
         return expr.equals(((Negation) o).expr);
+    }
+
+    @Override
+    public Expression clone() {
+        return new Negation(expr);
     }
 }

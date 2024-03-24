@@ -1,10 +1,16 @@
 package B.expression;
 
+import java.util.Vector;
+
 public class Variable extends Expression {
     private final String name;
 
     public Variable(String name) {
         this.name = name;
+    }
+
+    public Variable(Variable other) {
+        this.name = other.name;
     }
 
     public String toString() {
@@ -17,5 +23,10 @@ public class Variable extends Expression {
             return false;
         }
         return ((Variable) o).name.equals(name);
+    }
+
+    @Override
+    public Expression clone() {
+        return new Variable(name);
     }
 }

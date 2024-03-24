@@ -10,20 +10,11 @@ import java.util.function.BiFunction;
 
 public class ExpressionBuilder {
     private final String expressionString;
-    private TokensBuffer buffer;
 
     public ExpressionBuilder(String expressionString) {
         this.expressionString = expressionString;
 
     }
-
-//    public Expression buildExpression() {
-////        List<String> tokens = new ExpressionTokenizer(expressionString).getTokens();
-////        int turnstileIndex = tokens.indexOf("|-");
-////        List<String> left = tokens.subList(0, turnstileIndex);
-////        List<String> right = tokens.subList(turnstileIndex, tokens.size());
-////        return new Turnstile(parse(new TokensBuffer(left)), parse(new TokensBuffer(right)));
-//    }
 
     public Expression parse() {
         return parseLine(new TokensBuffer(new ExpressionTokenizer(expressionString).getTokens()));
@@ -32,10 +23,10 @@ public class ExpressionBuilder {
     private Expression parseContext(TokensBuffer buffer) {
         if (buffer.next().equals("|-")) {
             buffer.back();
-            return new Context(List.of());
+            return new Context(new ArrayList<>());
         }
         buffer.back();
-        List<Expression> exprs = new ArrayList<>();
+        ArrayList<Expression> exprs = new ArrayList<>();
         exprs.add(parseImpl(buffer));
         while (true) {
             String nextToken = buffer.next();
