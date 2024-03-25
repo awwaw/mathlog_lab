@@ -16,7 +16,11 @@ public class ExpressionTokenizer {
         StringBuilder currentVariable = new StringBuilder();
         while (i != expression.length()) {
             char currentChar = expression.charAt(i);
-            if (Character.isAlphabetic(currentChar)) {
+            if (Character.isWhitespace(currentChar) || currentChar == '\r' || currentChar == '\t') {
+                i++;
+                continue;
+            }
+            if (Character.isAlphabetic(currentChar) || Character.isDigit(currentChar) || currentChar == 0x0027) {
                 if (currentVariable.isEmpty()) {
                     currentVariable = new StringBuilder(String.valueOf(currentChar));
                 } else {
