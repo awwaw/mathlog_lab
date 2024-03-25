@@ -53,7 +53,7 @@ public class ModusPonensProof implements Proof {
                         Expression e = expressions.get(j);
                         if (e instanceof DoubleArgumentExpression de) {
                             if (de.getRight().equals(need)) {
-                                return String.format("[M.P. %d, %d]", indexes.get(i) + 1, indexes.get(j) + 1);
+                                return String.format("[M.P. %d, %d]", indexes.get(j) + 1, indexes.get(i) + 1);
                             }
                         }
                     }

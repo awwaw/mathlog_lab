@@ -114,15 +114,17 @@ public class AxiomeProof implements Proof {
 
             new Implication( // 10
                     new Negation(
-                            new Negation(new Variable("A"))
+                            new Negation(
+                                    new Variable("A")
+                            )
                     ),
                     new Variable("A")
             )
     );
 
     private boolean check(Map<String, Expression> substitution, Expression axiom, Expression expr) {
-        if (axiom instanceof DoubleArgumentExpression dax) {
-            if (expr instanceof DoubleArgumentExpression dexpr) {
+        if (axiom.clone() instanceof DoubleArgumentExpression dax) {
+            if (expr.clone() instanceof DoubleArgumentExpression dexpr) {
                 if (expr instanceof Turnstile turn && turn.getLeft().toString().isEmpty()) {
                     return check(substitution, axiom, turn.getRight());
                 }
@@ -134,12 +136,12 @@ public class AxiomeProof implements Proof {
             } else {
                 return false;
             }
-        } else if (axiom instanceof Negation negAx) {
-            if (expr instanceof  Negation negExpr) {
+        } else if (axiom.clone() instanceof Negation negAx) {
+            if (expr.clone() instanceof  Negation negExpr) {
                 return check(substitution, negAx.getExpr(), negExpr.getExpr());
             }
             return false;
-        } else if (axiom instanceof Variable varAx) {
+        } else if (axiom.clone() instanceof Variable varAx) {
             String name = varAx.toString();
             if (substitution.containsKey(name)) {
                 return substitution.get(name).equals(expr);
@@ -158,7 +160,7 @@ public class AxiomeProof implements Proof {
         for (int i = 0; i < AXIOMS.size(); i++) {
             Map<String, Expression> keys = new HashMap<>();
             Expression axiom = AXIOMS.get(i);
-            if (check(keys, axiom, expr)) {
+            if (check(keys, axiom.clone(), expr.clone())) {
                 return String.format("[Ax. sch. %d]", i + 1);
             }
         }

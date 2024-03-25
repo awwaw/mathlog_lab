@@ -15,6 +15,10 @@ public class HypothesesProof implements Proof {
                 if (idx != -1) {
                     return String.format("[Hyp. %d]", idx + 1);
                 }
+            } else { // In this case we have smth like (A&B) |- ...
+                if (turn.getLeft().equals(turn.getRight())) {
+                    return "[Hyp. 1]";
+                }
             }
         }
         return null;

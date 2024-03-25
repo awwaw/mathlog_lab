@@ -8,11 +8,6 @@ public class Negation extends Expression {
     public Negation(Expression expr) {
         this.expr = expr;
     }
-
-    public Negation(Negation other) {
-        this.expr = other.getExpr();
-    }
-
     public Expression getExpr() {
         return expr;
     }
