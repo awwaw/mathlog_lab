@@ -29,7 +29,7 @@ public class Variable extends ExpressionArgument {
         }
 
         Variable other = (Variable) o;
-        return other.getName() == name;
+        return Objects.equals(other.getName(), name);
     }
 
     @Override

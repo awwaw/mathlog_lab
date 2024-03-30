@@ -2,6 +2,7 @@ package Ordinals.expression;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class NormalizedExpressionUtils {
     public static boolean checkForZero(NormalizedExpression expr) {
@@ -18,5 +19,6 @@ public class NormalizedExpressionUtils {
 
     public static NormalizedExpression createDigit(Term term) {
         return new NormalizedExpression(new ArrayList<>(Collections.singleton(term)));
+
     }
 }

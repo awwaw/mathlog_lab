@@ -1,7 +1,7 @@
 package Ordinals.expression;
 
 public class Multiply extends BinaryExpression {
-    protected Multiply(Expression left, Expression right) {
+    public Multiply(Expression left, Expression right) {
         super(left, right);
     }
 

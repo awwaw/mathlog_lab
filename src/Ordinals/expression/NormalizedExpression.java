@@ -12,7 +12,7 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
         int minSize = Math.min(size(), o.size());
 
         for (; i + 1 < minSize; i++) {
-            comparison = get(i).compareTo(o.get(i));
+            comparison = get(i + 1).compareTo(o.get(i + 1));
             if (comparison != 0) {
                 break;
             }
@@ -89,24 +89,24 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
      */
 
     private int getComparison(NormalizedExpression other) {
-        return ordinal.getLast().getPower().compareTo(other.getFirst().getPower());
+        return getLast().getPower().compareTo(other.getFirst().getPower());
     }
 
     public NormalizedExpression add(NormalizedExpression other) {
         if (this == other) {
-            ordinal.getLast().setValue(ordinal.getLast().getValue() * 2);
+            getLast().setValue(getLast().getValue() * 2);
             return this;
         }
         int comparison = getComparison(other);
         while (comparison < 0) {
-            ordinal.removeLast();
+            ordinal.remove(size() - 1);
             if (ordinal.isEmpty()) break;
 
             comparison = getComparison(other);
         }
 
         if (comparison == 0 && !ordinal.isEmpty()) {
-            ordinal.getLast().addValue(other.getFirst().getValue());
+            getLast().addValue(other.getFirst().getValue());
             ordinal.addAll(other.getOrdinal().subList(1, other.ordinal.size()));
         } else {
             ordinal.addAll(other.getOrdinal());
@@ -116,20 +116,20 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
 
     public NormalizedExpression multiply(NormalizedExpression other) {
         final NormalizedExpression ZERO = NormalizedExpressionUtils.getZero();
-        if (compareTo(ZERO) * other.compareTo(ZERO) == 0) {
+        if (NormalizedExpressionUtils.checkForZero(this) || NormalizedExpressionUtils.checkForZero(other)) {
             ordinal = ZERO.getOrdinal();
             return this;
         }
 
         NormalizedExpression totalResult = NormalizedExpressionUtils.getZero();
-        for (int i = 0; i < other.getOrdinal().size(); i++) {
+        for (int i = 0; i < other.size(); i++) {
             NormalizedExpression localResult;
             Term rightDigit = other.get(i);
             if (rightDigit.getPower().compareTo(ZERO) == 0) {
                 localResult = new NormalizedExpression(this);
                 localResult.getFirst().multiplyValue(rightDigit.getValue());
             } else {
-                NormalizedExpression power = new NormalizedExpression(ordinal.getFirst().getPower());
+                NormalizedExpression power = new NormalizedExpression(getFirst().getPower());
                 power.add(other.get(i).getPower());
                 List<Term> digits = List.of(
                         new Term(
@@ -142,7 +142,11 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
                 localResult = new NormalizedExpression(digits);
             }
 
-            totalResult.add(localResult);
+            if (i == 0) {
+                totalResult.ordinal = new ArrayList<>(localResult.getOrdinal());
+            } else {
+                totalResult.add(localResult);
+            }
         }
 
         ordinal = totalResult.getOrdinal();
@@ -151,21 +155,22 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
 
     public NormalizedExpression power(NormalizedExpression other) {
         NormalizedExpression w = new NormalizedExpression();
-        NormalizedExpression result = new NormalizedExpression(1);
+        NormalizedExpression result = NormalizedExpressionUtils.getOne();
 
         if (NormalizedExpressionUtils.checkForZero(other)) { // x^0 = 1
             ordinal = result.getOrdinal();
             return this;
         }
 
-        if (NormalizedExpressionUtils.checkForZero(this) || compareTo(result) == 0) { // 0^n = 0 && 1^n = 1
+        if (NormalizedExpressionUtils.checkForZero(this)
+                || compareTo(NormalizedExpressionUtils.getOne()) == 0) { // 0^n = 0 && 1^n = 1
             return this;
         }
 
         if (compareTo(w) < 0 && other.compareTo(w) < 0) {
-            ordinal.getFirst().setValue(
+            getFirst().setValue(
                     (int) Math.pow(
-                            ordinal.getFirst().getValue(),
+                            getFirst().getValue(),
                             other.getFirst().getValue()
                     )
             );
@@ -173,20 +178,20 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
         }
 
         if (compareTo(w) < 0) {
-            int leftFirstValue = ordinal.getFirst().getValue();
+            int leftFirstValue = getFirst().getValue();
             int exp = 0;
-            if (other.getLast().getPower() != null) {
+            if (!other.getLast().hasPower()) {
                 exp = other.getLast().getValue();
             }
 
             List<Term> newTerms = new ArrayList<>();
             for (int i = 0; i < other.size(); i++) {
-                if (other.get(i).getPower() != null && other.get(i).getPower().compareTo(w) >= 0) {
+                if (other.get(i).hasPower() && other.get(i).getPower().compareTo(w) >= 0) {
                     newTerms.add(other.get(i).clone());
-                } else if (other.get(i).getPower() != null && other.get(i).getPower().getFirst().getValue() != 1) {
+                } else if (other.get(i).hasPower() && other.get(i).getPower().getFirst().getValue() != 1) {
                     newTerms.add(other.get(i).clone());
                     newTerms.get(newTerms.size() - 1).getPower().getFirst().addValue(-1);
-                } else if (other.get(i).getPower() != null) {
+                } else if (other.get(i).hasPower()) {
                     newTerms.add(new Term(other.get(i).getValue()));
                 }
             }
@@ -211,10 +216,10 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
                         new Term(
                                 1,
                                 new NormalizedExpression(
-                                        ordinal.getFirst().getPower()
-                                )
+                                        getFirst().getPower()
+                                ).multiply(digit)
                         )
-                ).multiply(digit);
+                );
             } else {
                 localResult = this.power(
                         digit.getFirst().getValue()

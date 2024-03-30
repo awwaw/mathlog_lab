@@ -1,7 +1,7 @@
 package Ordinals.expression;
 
 public class Degree extends BinaryExpression {
-    protected Degree(Expression left, Expression right) {
+    public Degree(Expression left, Expression right) {
         super(left, right);
     }
 
