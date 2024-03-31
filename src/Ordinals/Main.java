@@ -10,10 +10,12 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.nio.Buffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 //    public static void main(String[] args) {
@@ -67,6 +69,15 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        test();
+        Scanner scanner = new Scanner(System.in);
+        String expression = scanner.nextLine();
+        int index = expression.indexOf("=");
+        Expression parsedLeft = new ExpressionBuilder(expression.substring(0, index)).parse();
+        Expression parsedRight = new ExpressionBuilder(expression.substring(index)).parse();
+        if (parsedLeft.normalize().equals(parsedRight.normalize())) {
+            System.out.println("Equal");
+        } else {
+            System.out.println("Not equal");
+        }
     }
 }
