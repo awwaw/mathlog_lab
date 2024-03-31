@@ -3,8 +3,8 @@ package Ordinals.expression;
 import java.util.Comparator;
 
 public class Term implements Comparable<Term> {
-    private int value;
-    private NormalizedExpression power = null;
+    public int value;
+    public NormalizedExpression power = null;
 
     public Term(int value) {
         this.value = value;

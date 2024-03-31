@@ -3,6 +3,7 @@ package Ordinals.expression;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NormalizedExpression implements Comparable<NormalizedExpression> {
     @Override
@@ -55,17 +56,15 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
     }
 
     public NormalizedExpression(NormalizedExpression other) {
-        ordinal = new ArrayList<>();
-        ordinal.addAll(other.getOrdinal());
+        ordinal = other.ordinal.stream()
+                .map(Term::clone)
+                .collect(Collectors.toList());
     }
 
     public NormalizedExpression(List<Term> terms) {
-        ordinal = new ArrayList<>();
-        ordinal.addAll(terms);
-    }
-
-    private void addTerm(Term term) {
-        ordinal.add(term);
+        ordinal = terms.stream()
+                .map(Term::clone)
+                .collect(Collectors.toList());
     }
 
     private int size() {
@@ -100,16 +99,18 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
         int comparison = getComparison(other);
         while (comparison < 0) {
             ordinal.remove(size() - 1);
-            if (ordinal.isEmpty()) break;
+            if (ordinal.isEmpty()) {
+                break;
+            }
 
             comparison = getComparison(other);
         }
 
         if (comparison == 0 && !ordinal.isEmpty()) {
-            getLast().addValue(other.getFirst().getValue());
-            ordinal.addAll(other.getOrdinal().subList(1, other.ordinal.size()));
+            getLast().setValue(getLast().getValue() + other.getFirst().getValue());
+            ordinal.addAll(NormalizedExpressionUtils.getSublist(other, 1, other.size()));
         } else {
-            ordinal.addAll(other.getOrdinal());
+            ordinal.addAll(NormalizedExpressionUtils.getSublist(other, 0, other.size()));
         }
         return this;
     }
@@ -124,18 +125,16 @@ public class NormalizedExpression implements Comparable<NormalizedExpression> {
         NormalizedExpression totalResult = NormalizedExpressionUtils.getZero();
         for (int i = 0; i < other.size(); i++) {
             NormalizedExpression localResult;
-            Term rightDigit = other.get(i);
-            if (rightDigit.getPower().compareTo(ZERO) == 0) {
+            Term rightDigit = other.get(i).clone();
+            if (NormalizedExpressionUtils.checkForZero(rightDigit.getPower())) {
                 localResult = new NormalizedExpression(this);
-                localResult.getFirst().multiplyValue(rightDigit.getValue());
+                localResult.getFirst().value *= rightDigit.getValue();
             } else {
                 NormalizedExpression power = new NormalizedExpression(getFirst().getPower());
                 power.add(other.get(i).getPower());
                 List<Term> digits = List.of(
                         new Term(
-                                other.getOrdinal()
-                                        .get(i)
-                                        .getValue(),
+                                rightDigit.getValue(),
                                 power
                         )
                 );
