@@ -32,7 +32,6 @@ public class Main {
         try {
             List<String> lines = Files.readAllLines(Path.of("src/Ordinals/input.txt"));
             List<String> errors = new ArrayList<>();
-            List<String> passedTests = new ArrayList<>();
             int passed = 0;
             for (String line : lines) {
                 int eqIndex = line.indexOf("=");
@@ -52,7 +51,6 @@ public class Main {
                     );
                 } else {
                     passed++;
-                    passedTests.add(line);
                 }
             }
             System.out.println(String.format("Passed %d out of %d", passed, lines.size()));
@@ -74,7 +72,9 @@ public class Main {
         int index = expression.indexOf("=");
         Expression parsedLeft = new ExpressionBuilder(expression.substring(0, index)).parse();
         Expression parsedRight = new ExpressionBuilder(expression.substring(index)).parse();
-        if (parsedLeft.normalize().equals(parsedRight.normalize())) {
+        NormalizedExpression normalizedLeft = parsedLeft.normalize();
+        NormalizedExpression normalizedRight = parsedRight.normalize();
+        if (normalizedLeft.equals(normalizedRight)) {
             System.out.println("Equal");
         } else {
             System.out.println("Not equal");

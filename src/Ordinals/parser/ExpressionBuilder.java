@@ -43,20 +43,13 @@ public class ExpressionBuilder {
             }
         }
         return concatList(res, Degree::new);
-//        if (nextToken.equals("^")) {
-//            Expression right = parseOperand(buffer);
-//            return new Degree(left, right);
-//        } else {
-//            buffer.back();
-//            return left;
-//        }
     }
 
     private Expression concatList(List<Expression> exprs, BiFunction<Expression, Expression, Expression> ctor) {
-        int idx = 1;
-        Expression res = exprs.getFirst();
-        while (idx < exprs.size()) {
-            res = ctor.apply(res, exprs.get(idx++));
+        int idx = exprs.size() - 2;
+        Expression res = exprs.getLast();
+        while (idx >= 0) {
+            res = ctor.apply(exprs.get(idx--), res);
         }
         return res;
     }
